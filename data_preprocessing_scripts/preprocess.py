@@ -1,10 +1,7 @@
 import os
 import PIL
 from PIL import Image
-import torch
 import config
-import torchvision
-from torchvision import transforms
 import numpy as np
 
 
@@ -43,14 +40,14 @@ def create_folder_structure(destination_path: str = config.DESTINATION_PATH) -> 
        |        | ...
        |        |----- Category 2
     """
+    for path in [config.TRAIN_DATASET_PATH, config.TEST_DATASET_PATH]:
+        if not os.path.exists(path):
+            os.makedirs(path, exist_ok=True)
 
-    for path in [destination_path, config.TRAIN_DATASET_PATH, config.TEST_DATASET_PATH]:
-        if not os.path.exists(path):
-            os.makedirs(path, exist_ok=True)
-    for category_name in config.CATEGORY_NAMES:
-        path = f"{destination_path}/{category_name}"
-        if not os.path.exists(path):
-            os.makedirs(path, exist_ok=True)
+        for category_name in config.CATEGORY_NAMES:
+            path = f"{path}/{category_name}"
+            if not os.path.exists(path):
+                os.makedirs(path, exist_ok=True)
 
     assert os.path.exists("preprocessed_dataset\YELLOW")
     assert os.path.exists("preprocessed_dataset\SKIN")
