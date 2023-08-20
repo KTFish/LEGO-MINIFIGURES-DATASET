@@ -67,33 +67,47 @@ def add_margins(image_path: str) -> PIL.Image:
     return image
 
 
-def preprocess_dataset(verbose: bool = False, display_step: int = 100) -> None:
+def preprocess_directory(dir: str) -> int:
+    """Transforms images from the directory of given name (not path).
+
+    Args:
+        dir (str): Name of directory (category from raw dataset).
+
+    Returns:
+        int: Number of images in that directory (used for progress monitoring).
+    """
+    # Assign new category based on the config file
+    category = (
+        "YELLOW" if dir in config.YELLOW else "SKIN" if dir in config.SKIN else "OTHER"
+    )
+    # Loop through images and do the transformations
+    dir_path = f"{config.RAW_DATASET_PATH}/{dir}"
+    for image_name in os.listdir(dir_path):
+        image_path = f"{dir_path}/{image_name}"
+        extended_image = add_margins(image_path)
+
+        save_path = f"{config.DESTINATION_PATH}/{category}/{image_name}"
+        extended_image.save(save_path)
+
+    return len(os.listdir(dir_path))
+
+
+def preprocess_dataset(verbose: bool = True, display_step: int = 100) -> None:
+    """Runs the data preprocessing pipeline.
+
+    Args:
+        verbose (bool, optional): If set to True the function prints information about the progress. Defaults to True.
+        display_step (int, optional): Rate of print outs. Defaults to 100.
+    """
+    create_folder_structure()
     processed_images = 0
 
     # Sort images into cateogires (categories are stored in config.py)
     for dir in os.listdir(config.RAW_DATASET_PATH):
-        # Assign new category based on the config file
-        category = (
-            "YELLOW"
-            if dir in config.YELLOW
-            else "SKIN"
-            if dir in config.SKIN
-            else "OTHER"
-        )
-        # Loop through images and do the transformations
-        dir_path = f"{config.RAW_DATASET_PATH}/{dir}"
-        for image_name in os.listdir(dir_path):
-            image_path = f"{dir_path}/{image_name}"
-            extended_image = add_margins(image_path)
-
-            save_path = f"{config.DESTINATION_PATH}/{category}/{image_name}"
-            extended_image.save(save_path)
-            processed_images += 1
-
-            if verbose and processed_images % display_step == 0:
-                print(f"Processed {processed_images} / {config.NUM_IMAGES_RAW}")
+        processed_images += preprocess_directory(dir)
+        if verbose:
+            print(f"Processed {processed_images} / {config.NUM_IMAGES_RAW}")
 
 
 if __name__ == "__main__":
-    create_folder_structure()
     preprocess_dataset(verbose=True)
