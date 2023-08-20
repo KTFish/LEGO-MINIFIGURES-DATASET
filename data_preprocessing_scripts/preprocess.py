@@ -3,6 +3,7 @@ import PIL
 from PIL import Image
 import config
 import numpy as np
+from random import random
 
 
 def crop_image(
@@ -45,13 +46,9 @@ def create_folder_structure(destination_path: str = config.DESTINATION_PATH) -> 
             os.makedirs(path, exist_ok=True)
 
         for category_name in config.CATEGORY_NAMES:
-            path = f"{path}/{category_name}"
-            if not os.path.exists(path):
-                os.makedirs(path, exist_ok=True)
-
-    assert os.path.exists("preprocessed_dataset\YELLOW")
-    assert os.path.exists("preprocessed_dataset\SKIN")
-    assert os.path.exists("preprocessed_dataset\OTHER")
+            full_path = f"{path}/{category_name}"
+            if not os.path.exists(full_path):
+                os.makedirs(full_path, exist_ok=True)
 
 
 def add_margins(image_path: str) -> PIL.Image:
@@ -98,7 +95,8 @@ def preprocess_directory(dir: str) -> int:
         image_path = rf"{dir_path}/{image_name}"
         extended_image = add_margins(image_path)
 
-        save_path = rf"{config.DESTINATION_PATH}/{category}/{image_name}"
+        set_name = "train" if random() > 0.2 else "test"
+        save_path = rf"{config.DESTINATION_PATH}/{set_name}/{category}/{image_name}"
         extended_image.save(save_path)
 
     return len(os.listdir(dir_path))
@@ -115,13 +113,21 @@ def preprocess_dataset(verbose: bool = True) -> None:
 
     # Sort images into cateogires (categories are stored in config.py)
     for dir in os.listdir(config.RAW_DATASET_PATH):
-        processed_images += preprocess_directory(dir)  # Preproces images from directory
+        processed_images += preprocess_directory(dir)
         if verbose:
             print(f"Processed {processed_images} / {config.NUM_IMAGES_RAW}")
 
 
+def test_folder_structure() -> None:
+    assert os.path.exists(r"preprocessed_dataset\train\YELLOW")
+    assert os.path.exists(r"preprocessed_dataset\train\SKIN")
+    assert os.path.exists(r"preprocessed_dataset\train\OTHER")
+    assert os.path.exists(r"preprocessed_dataset\test\YELLOW")
+    assert os.path.exists(r"preprocessed_dataset\test\SKIN")
+    assert os.path.exists(r"preprocessed_dataset\test\OTHER")
+
+
 if __name__ == "__main__":
-    preprocess_directory(dir="town")
-    # preprocess_dataset(verbose=True)
+    preprocess_dataset(verbose=True)
 
 # TODO: Solve FileNotFoundError: [Errno 2] No such file or directory: './preprocessed_dataset/YELLOW/CTY0527-Construction-Worke-....
