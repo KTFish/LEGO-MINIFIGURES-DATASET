@@ -41,6 +41,10 @@ def create_folder_structure(destination_path: str = config.DESTINATION_PATH) -> 
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
 
+    assert os.path.exists("preprocessed_dataset\YELLOW")
+    assert os.path.exists("preprocessed_dataset\SKIN")
+    assert os.path.exists("preprocessed_dataset\OTHER")
+
 
 def add_margins(image_path: str) -> PIL.Image:
     """Adds left and right margins to the image in order to make it a square shaped image (height x height).
@@ -56,7 +60,7 @@ def add_margins(image_path: str) -> PIL.Image:
     image = Image.open(image_path).convert("RGB")
     image_array = np.array(image)
     height, width, _ = image_array.shape
-    # width, height, _ = image_array.shape
+
     if height > width:
         margin_size = (height - width) // 2
         margin = np.full((height, margin_size, 3), 255, dtype=np.uint8)  # Adjust dtype
@@ -81,33 +85,35 @@ def preprocess_directory(dir: str) -> int:
         "YELLOW" if dir in config.YELLOW else "SKIN" if dir in config.SKIN else "OTHER"
     )
     # Loop through images and do the transformations
-    dir_path = f"{config.RAW_DATASET_PATH}/{dir}"
+    dir_path = rf"{config.RAW_DATASET_PATH}/{dir}"
     for image_name in os.listdir(dir_path):
-        image_path = f"{dir_path}/{image_name}"
+        image_path = rf"{dir_path}/{image_name}"
         extended_image = add_margins(image_path)
 
-        save_path = f"{config.DESTINATION_PATH}/{category}/{image_name}"
+        save_path = rf"{config.DESTINATION_PATH}/{category}/{image_name}"
         extended_image.save(save_path)
 
     return len(os.listdir(dir_path))
 
 
-def preprocess_dataset(verbose: bool = True, display_step: int = 100) -> None:
+def preprocess_dataset(verbose: bool = True) -> None:
     """Runs the data preprocessing pipeline.
 
     Args:
         verbose (bool, optional): If set to True the function prints information about the progress. Defaults to True.
-        display_step (int, optional): Rate of print outs. Defaults to 100.
     """
     create_folder_structure()
     processed_images = 0
 
     # Sort images into cateogires (categories are stored in config.py)
     for dir in os.listdir(config.RAW_DATASET_PATH):
-        processed_images += preprocess_directory(dir)
+        processed_images += preprocess_directory(dir)  # Preproces images from directory
         if verbose:
             print(f"Processed {processed_images} / {config.NUM_IMAGES_RAW}")
 
 
 if __name__ == "__main__":
-    preprocess_dataset(verbose=True)
+    preprocess_directory(dir="town")
+    # preprocess_dataset(verbose=True)
+
+# TODO: Solve FileNotFoundError: [Errno 2] No such file or directory: './preprocessed_dataset/YELLOW/CTY0527-Construction-Worke-....

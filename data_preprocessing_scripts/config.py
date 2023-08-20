@@ -5,6 +5,8 @@ DESTINATION_PATH = "./preprocessed_dataset"  # Path to dataset with cropped and 
 # Number of images in dataset
 NUM_IMAGES_RAW = 14999
 
+PREPROCESSED_CATEGORIES = []
+
 
 # Shape of images
 CROP_WIDTH, CROP_HEIGHT = 310, 310  # Shape after cropping
