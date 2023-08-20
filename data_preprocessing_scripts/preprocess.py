@@ -29,13 +29,24 @@ def create_folder_structure(destination_path: str = config.DESTINATION_PATH) -> 
     """Create folder structure for the transformed dataset like that:
     DESTINATION_PATH
        |
-       |----- Category 1
-       |----- Category 2
-       | ...
-       |----- Category n
+       |----- Train
+       |        |
+       |        |----- Category 1
+       |        |----- Category 2
+       |        | ...
+       |        |----- Category 2
+       |
+       |----- Test
+       |        |
+       |        |----- Category 1
+       |        |----- Category 2
+       |        | ...
+       |        |----- Category 2
     """
-    if not os.path.exists(destination_path):
-        os.makedirs(destination_path, exist_ok=True)
+
+    for path in [destination_path, config.TRAIN_DATASET_PATH, config.TEST_DATASET_PATH]:
+        if not os.path.exists(path):
+            os.makedirs(path, exist_ok=True)
     for category_name in config.CATEGORY_NAMES:
         path = f"{destination_path}/{category_name}"
         if not os.path.exists(path):

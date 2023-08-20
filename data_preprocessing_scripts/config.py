@@ -1,6 +1,9 @@
 # Paths
 RAW_DATASET_PATH = "./dataset"  # Path to images scraped form Internet splitted into categories used on the website
+
 DESTINATION_PATH = "./preprocessed_dataset"  # Path to dataset with cropped and scaled images splitted into 3 classes (yellow, skin, other)
+TRAIN_DATASET_PATH = f"{DESTINATION_PATH}/train"
+TEST_DATASET_PATH = f"{DESTINATION_PATH}/test"
 
 # Number of images in dataset
 NUM_IMAGES_RAW = 14999
