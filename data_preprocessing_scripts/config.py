@@ -2,6 +2,10 @@
 RAW_DATASET_PATH = "./dataset"  # Path to images scraped form Internet splitted into categories used on the website
 DESTINATION_PATH = "./preprocessed_dataset"  # Path to dataset with cropped and scaled images splitted into 3 classes (yellow, skin, other)
 
+# Number of images in dataset
+NUM_IMAGES_RAW = 14999
+
+
 # Shape of images
 CROP_WIDTH, CROP_HEIGHT = 310, 310  # Shape after cropping
 FINAL_WIDTH, FINAL_HEIGHT = (
