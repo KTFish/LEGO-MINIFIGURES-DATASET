@@ -1,3 +1,5 @@
+
+dataset_lego_vs_notlego/
 # Ignore compiled Python files
 __pycache__/
 *.pyc
