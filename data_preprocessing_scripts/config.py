@@ -1,5 +1,5 @@
 # Paths
-RAW_DATASET_PATH = "./dataset"  # Path to images scraped form Internet splitted into categories used on the website
+RAW_DATASET_PATH = "./only_lego_dataset"  # Path to images scraped form Internet splitted into categories used on the website
 
 DESTINATION_PATH = "./preprocessed_dataset"  # Path to dataset with cropped and scaled images splitted into 3 classes (yellow, skin, other)
 TRAIN_DATASET_PATH = f"{DESTINATION_PATH}/train"

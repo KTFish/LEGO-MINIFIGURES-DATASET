@@ -4,7 +4,7 @@ import PIL
 from PIL import Image
 import config
 import numpy as np
-from random import random
+from tqdm import tqdm
 
 
 def create_folder_structure() -> None:
@@ -38,14 +38,19 @@ def add_margins(image_path: str) -> PIL.Image:
     return image
 
 
-def preprocess_dataset():
+def preprocess_dataset() -> None:
     create_folder_structure()
     dataset_path = os.path.join(".", "only_lego_dataset")
     assert os.path.exists(dataset_path), "Lack of dataset to be processed."
 
-    images_done = 0
-    num_images = len(os.listdir(dataset_path))
-    for image_name in os.listdir(dataset_path):
+    # For progress monitoring
+    # images_done = 0
+    # num_images = len(os.listdir(dataset_path))
+
+    # Preprocessing Loop
+    # for image_name in os.listdir(dataset_path):
+    images = os.listdir(dataset_path)
+    for image_name in tqdm(images):
         # Get path to the original image
         image_path = os.path.join(dataset_path, image_name)
 
@@ -57,9 +62,9 @@ def preprocess_dataset():
         extended_image.save(save_path)
 
         # Monitor progress
-        images_done += 1
-        if images_done % 100 == 0:
-            print(f"Preprocessed images: {images_done} / {num_images}")
+        # images_done += 1
+        # if images_done % 100 == 0:
+        #     print(f"Preprocessed images: {images_done} / {num_images}")
 
 
 if __name__ == "__main__":

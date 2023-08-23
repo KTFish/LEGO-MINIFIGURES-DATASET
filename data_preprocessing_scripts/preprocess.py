@@ -6,23 +6,6 @@ import numpy as np
 from random import random
 
 
-def crop_image(
-    image_path: str,
-    width_start: int,
-    width_end: int,
-    height_start: int,
-    height_end: int,
-) -> PIL.Image:
-    """
-    Takes path to image and edge point in order to crop an image.
-    """
-
-    # Open image and access the dimensions
-    image = Image.open(image_path)
-    cropped_image = image.crop((width_start, height_start, width_end, height_end))
-    return cropped_image
-
-
 def create_folder_structure(destination_path: str = config.DESTINATION_PATH) -> None:
     """Create folder structure for the transformed dataset like that:
     DESTINATION_PATH
@@ -76,30 +59,33 @@ def add_margins(image_path: str) -> PIL.Image:
     return image
 
 
-def preprocess_directory(dir: str) -> int:
-    """Transforms images from the directory of given name (not path).
+# def preprocess_directory(dir: str) -> int:
+#     """Transforms images from the directory of given name (not path).
 
-    Args:
-        dir (str): Name of directory (category from raw dataset).
+#     Args:
+#         dir (str): Name of directory (category from raw dataset).
 
-    Returns:
-        int: Number of images in that directory (used for progress monitoring).
-    """
-    # Assign new category based on the config file
-    category = (
-        "YELLOW" if dir in config.YELLOW else "SKIN" if dir in config.SKIN else "OTHER"
-    )
-    # Loop through images and do the transformations
-    dir_path = rf"{config.RAW_DATASET_PATH}/{dir}"
-    for image_name in os.listdir(dir_path):
-        image_path = rf"{dir_path}/{image_name}"
-        extended_image = add_margins(image_path)
+#     Returns:
+#         int: Number of images in that directory (used for progress monitoring).
+#     """
+#     # Assign new category based on the config file
+#     category = (
+#         "YELLOW" if dir in config.YELLOW else "SKIN" if dir in config.SKIN else "OTHER"
+#     )
+#     # Loop through images and do the transformations
+#     dir_path = rf"{config.RAW_DATASET_PATH}/{dir}"
+#     for image_name in os.listdir(dir_path):
+#         image_path = rf"{dir_path}/{image_name}"
+#         extended_image = add_margins(image_path)
 
-        set_name = "train" if random() > 0.2 else "test"
-        save_path = rf"{config.DESTINATION_PATH}/{set_name}/{category}/{image_name}"
-        extended_image.save(save_path)
+#         set_name = "train" if random() > 0.2 else "test"
+#         save_path = rf"{config.DESTINATION_PATH}/{set_name}/{category}/{image_name}"
 
-    return len(os.listdir(dir_path))
+#         # TODO: Issue with brackets??
+#         save_path = save_path.replace("(", "").replace(")", "")
+#         extended_image.save(save_path)
+
+#     return len(os.listdir(dir_path))
 
 
 def preprocess_dataset(verbose: bool = True) -> None:
@@ -128,6 +114,9 @@ def test_folder_structure() -> None:
 
 
 if __name__ == "__main__":
-    preprocess_dataset(verbose=True)
-
+    # preprocess_dataset(verbose=True)
+    # preprocess_directory("star-wars")
+    x = "CTY0699-Construction-Worker-Male-Orange-Safety-Vest-Reflective-Stripes-Reddish-Brown-Shirt-Dark-Tan-Legs-Red-Construction-Helmet-with-Black-Headphones-Orange-Safety-Glasses.png"
+    y = "CTY0699-Construction-Worker-Male-Orange-Safety-Vest-Reflective-Stripes-Reddish-Brown-Shirt-Dark-Tan-Legs-Red-Construction-Helmet-with-Black-Headphones-Orange-Safety-Glasses.png"
+    print(x == y)
 # TODO: Solve FileNotFoundError: [Errno 2] No such file or directory: './preprocessed_dataset/YELLOW/CTY0527-Construction-Worke-....
